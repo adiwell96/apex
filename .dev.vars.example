@@ -1,0 +1,5 @@
+# Lokale Entwicklung (npm run dev). Niemals echte Produktionswerte verwenden.
+APP_PASSWORD=lokales-test-passwort-123
+SESSION_SECRET=bitte-mindestens-32-zufaellige-zeichen-eintragen
+PIPELINE_TOKEN=lokaler-pipeline-token-mindestens-24-zeichen
+EDITORIAL_TOKEN=lokaler-editorial-token-mindestens-24-zeichen

@@ -1,0 +1,31 @@
+# Lokale Entwicklungskonfiguration (ohne Workers-AI-Binding, das einen Cloudflare-Login benötigt).
+# APEX — Cloudflare Worker (Free-Plan). Keine kostenpflichtigen Bindings.
+name = "apex"
+main = "src/worker.ts"
+compatibility_date = "2026-11-01"
+workers_dev = true
+preview_urls = false
+keep_vars = true          # im Dashboard gesetzte Variablen bleiben bei Deployments erhalten
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = true   # jede Anfrage – auch statische Dateien – läuft durch die Zugriffskontrolle
+
+[[d1_databases]]
+binding = "DB"
+database_name = "apex"
+database_id = "00000000-0000-0000-0000-000000000000"   # wird bei der Einrichtung ersetzt (npx wrangler d1 create apex)
+migrations_dir = "migrations"
+
+[triggers]
+crons = ["*/15 * * * *"]   # Worker entscheidet anhand der Berliner Ortszeit (inkl. Sommer-/Winterzeit)
+
+[vars]
+AI_DAILY_LIMIT = "400"
+PUBLISH_HOUR = "6"
+GITHUB_WORKFLOW = "ingest.yml"
+# GITHUB_REPO = "benutzer/apex"   → als Variable setzen, siehe docs/SETUP.md
+
+[observability]
+enabled = true

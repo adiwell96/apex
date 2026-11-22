@@ -1,0 +1,30 @@
+{
+  "name": "apex",
+  "version": "1.0.0",
+  "description": "APEX — The Daily Automotive Journal (privat)",
+  "scripts": {
+    "dev": "wrangler dev --test-scheduled --config wrangler.local.toml",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc -p .",
+    "db:migrate:local": "wrangler d1 migrations apply apex --local --config wrangler.local.toml",
+    "db:migrate": "wrangler d1 migrations apply apex --remote",
+    "ingest": "node pipeline/ingest.ts",
+    "ingest:motorsport": "node pipeline/ingest.ts motorsport",
+    "test": "node --test tests/*.test.ts"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "fast-xml-parser": "^4.5.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261121.1",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/playfair-display": "^5.3.0",
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "@types/node": "^26.6.6",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.166.0"
+  },
+  "private": true,
+  "type": "module"
+}

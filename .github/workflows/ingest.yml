@@ -1,0 +1,33 @@
+# Nachrichten-Pipeline. Wird vom APEX-Worker (Cloudflare Cron) per workflow_dispatch angestoßen:
+# stündlich, vor der Morgenausgabe, an Rennwochenenden alle 15 Minuten. Der Zeitplan unten ist nur ein Sicherheitsnetz.
+name: ingest
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: full | motorsport
+        default: full
+        required: false
+  schedule:
+    - cron: '41 */6 * * *'
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+      - name: Feeds abrufen und an APEX übertragen
+        run: node pipeline/ingest.ts "${{ inputs.mode || 'full' }}"
+        env:
+          APEX_URL: ${{ vars.APEX_URL }}
+          PIPELINE_TOKEN: ${{ secrets.PIPELINE_TOKEN }}
